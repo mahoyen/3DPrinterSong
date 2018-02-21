@@ -1,1 +1,4 @@
 *.gcode
+*.xlsx
+test.txt
+.csv
