@@ -21,7 +21,7 @@ def getFeedrateDistanceVector(frequencyTimeVector):
 # Generates gCode from feedrate and distance and saves it in filename
 def generateGCode(feedrateDistancevector, filename):
     with open(filename, 'w') as file:
-        file.write(";Generated from midifile")
+        file.write(";FLAVOR:UltiGCode\n;TIME:13551\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4")
 
 # Genretates gCode from midifile
 def generateGCodeFromMidi(midiFilename, gCodeFilename):
