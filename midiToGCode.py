@@ -22,9 +22,11 @@ def getFrequencyTimeVector(filename):
 def getFeedrateDistanceVector(frequencyTimeVector):
     return [[FREQUENCYTOFEEDRATECONSTANT*f, FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T] for f, T in frequencyTimeVector]
 
+def translateFeedrateDistanceVectorToCoordinates(feedrateDistancevector):
+    return [feedrateDistancevector[1], 0, 0] 
 
 # Takes inn old coordinates and relative coordinates and outputs new coordinate
-def calculateNewPosition(oldCoordinates[3], relCoordinates[3]) {
+def calculateNewPosition(oldCoordinates[3], relCoordinates[3]):
 
     newCoordinates = [oldCoordinates[0],oldCoordinates[1],oldCoordinates[2]]
 
@@ -35,19 +37,18 @@ def calculateNewPosition(oldCoordinates[3], relCoordinates[3]) {
             raise Exception("Movement larger than build area or negativ")
         
         newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
-        
+
         if (newCoordinates[i] >= 0 or newCoordinates[i] < BUILDING_AREA[i]):
             direction[i] *= -1
             newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
             if not(newCoordinates[i] < 0 and newCoordinates[i] > BUILDING_AREA[i]):
                 raise Exception("New position is outside of build area")
     return newCoordinates[]
-}
 
 #Takes in coordinatearray and feedrate and outputs gcode string
-def coordinatesToGCode_G0(newCoordinates[3], feedrate) {
+def coordinatesToGCode_G0(newCoordinates[3], feedrate) 
     return gCodeLine = "G0 X"+str(newCoordinates[0])+" Y"+str(newCoordinate[1])+" Z"+str(newCoordinate[3])+" F"+str(feedrate)    
-}
+
 
 # Generates gCode from feedrate and distance and saves it in filename
 def generateGCode(feedrateDistancevector, filename):
