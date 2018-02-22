@@ -76,7 +76,7 @@ def generateGCode(feedrateDistanceMatrix, filename):
         coordinates = STARTPOSITION
         for pair in feedrateDistanceMatrix:
             coordinates = calculateNewPosition(coordinates, translateDistanceToCoordinate(pair[1]))
-            file.write(coordinatesToGCode_G0(coordinates, pair[0]))      
+            file.write(coordinatesToGCode_G0(coordinates, pair[0]) + "\n")      
 
         
 # Genretates gCode from midifile
