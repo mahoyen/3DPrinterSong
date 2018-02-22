@@ -7,6 +7,9 @@ FREQUENCYTOFEEDRATECONSTANT = 1
 TIMETODISTANCECONSTANT = 1
 BUILDING_AREA = [223, 223, 305]
 
+# Global variables
+direction = [1,1,1]
+
 # Converts from miditoneNumber to frequency
 def frequencyFromMidiNote(note):
     return 440*2**((note - 69)/12)
@@ -29,13 +32,14 @@ def calculateNewPosition(oldCoordinates[3], relCoordinates[3]) {
     for i in range(3):
         if not(oldCoordinates[i] >= 0 and oldCoordinates < BUILDING_AREA[i]):
             raise Exception("Position outside of build area")
-        if not(relCoordinates[i] >= 0 and relCoordinates < BUILDING_AREA[i])
+        if not(relCoordinates[i] >= 0 and relCoordinates < BUILDING_AREA[i]):
             raise Exception("Movement larger than build area or negativ")
         
-        newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]
-        if newCoordinates[i] >= BUILDING_AREA[i]:
-            newCoordinates[i] = oldCoordinates[i] - relCoordinates[i]
-            if newCoordinates[i] < 0:
+        newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
+        if (newCoordinates[i] >= 0 or newCoordinates[i] < BUILDING_AREA[i]):
+            direction[i] *= -1
+            newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
+            if not(newCoordinates[i] < 0 and newCoordinates[i] > BUILDING_AREA[i]):
                 raise Exception("New position is outside of build area")
         
 
