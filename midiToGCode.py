@@ -15,15 +15,15 @@ def frequencyFromMidiNote(note):
     return 440*2**((note - 69)/12)
 
 # Returns all the frequencies and durations from all the tone in filename
-def getFrequencyTimeVector(filename):
+def getFrequencyTimeMatrix(filename):
     return [[frequencyFromMidiNote(msg.note), msg.time] for msg in MidiFile(MIDIFILENAME).tracks[1] if (msg.type == "note_on")]
 
 # Converts frequency and time into feedrate and distance
-def getFeedrateDistanceVector(frequencyTimeVector):
-    return [[FREQUENCYTOFEEDRATECONSTANT*f, FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T] for f, T in frequencyTimeVector]
+def getFeedrateDistanceMatrix(frequencyTimeMatrix):
+    return [[FREQUENCYTOFEEDRATECONSTANT*f, FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T] for f, T in frequencyTimeMatrix]
 
-def translateFeedrateDistanceVectorToCoordinates(feedrateDistancevector):
-    return [[relX, 0,0] for feedrate, relX in feedrateDistancevector] 
+def translateFeedrateDistanceMatrixToCoordinates(feedrateDistanceMatrix):
+    return [[relX, 0,0] for feedrate, relX in feedrateDistanceMatrix] 
 
 # Takes inn old coordinates and relative coordinates and outputs new coordinate
 def calculateNewPosition(oldCoordinates[3], relCoordinates[3]):
@@ -50,9 +50,9 @@ def coordinatesToGCode_G0(newCoordinates[3], feedrate)
     return gCodeLine = "G0 X"+str(newCoordinates[0])+" Y"+str(newCoordinate[1])+" Z"+str(newCoordinate[3])+" F"+str(feedrate)    
 
 def master(midifilename, gcodeFilename, startingCoordinates):
-    feedrateDistanceVector = getFeedrateDistanceVector(getFrequencyTimeVector(midifilename))
-    feedrateVector = [[feedrate] for feedrate, distanse in feedrateDistanceVector]
-    coordinates = translateFeedrateDistanceVectorToCoordinates(feedrateDistanceVector)
+    feedrateDistanceMatrix = getFeedrateDistanceMatrix(getFrequencyTimeMatrix(midifilename))
+    feedrateMatrix = [[feedrate] for feedrate, distanse in feedrateDistanceMatrix]
+    coordinates = translateFeedrateDistanceMatrixToCoordinates(feedrateDistanceMatrix)
 
     for i in range(len(coordinates)):
         if (not i):
@@ -63,7 +63,7 @@ def master(midifilename, gcodeFilename, startingCoordinates):
 
 
 # Generates gCode from feedrate and distance and saves it in filename
-def generateGCode(feedrateDistancevector, filename):
+def generateGCode(feedrateDistanceMatrix, filename):
     with open(filename, 'w') as file:
         file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")
         ## ADD starting position in array[3]
@@ -72,8 +72,8 @@ def generateGCode(feedrateDistancevector, filename):
 
 # Genretates gCode from midifile
 def generateGCodeFromMidi(midiFilename, gCodeFilename):
-    movements = getFrequencyTimeVector(midiFilename)
-    movements = getFeedrateDistanceVector(movements)
+    movements = getFrequencyTimeMatrix(midiFilename)
+    movements = getFeedrateDistanceMatrix(movements)
     return generateGCode(movements, gCodeFilename)
 
 generateGCode(MIDIFILENAME, "a.gcode")
