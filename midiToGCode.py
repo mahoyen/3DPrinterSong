@@ -23,7 +23,7 @@ def getFeedrateDistanceVector(frequencyTimeVector):
     return [[FREQUENCYTOFEEDRATECONSTANT*f, FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T] for f, T in frequencyTimeVector]
 
 def translateFeedrateDistanceVectorToCoordinates(feedrateDistancevector):
-    return [feedrateDistancevector[1], 0, 0] 
+    return [[relX, 0,0] for feedrate, relX in feedrateDistancevector] 
 
 # Takes inn old coordinates and relative coordinates and outputs new coordinate
 def calculateNewPosition(oldCoordinates[3], relCoordinates[3]):
@@ -49,11 +49,13 @@ def calculateNewPosition(oldCoordinates[3], relCoordinates[3]):
 def coordinatesToGCode_G0(newCoordinates[3], feedrate) 
     return gCodeLine = "G0 X"+str(newCoordinates[0])+" Y"+str(newCoordinate[1])+" Z"+str(newCoordinate[3])+" F"+str(feedrate)    
 
+def things()
 
 # Generates gCode from feedrate and distance and saves it in filename
 def generateGCode(feedrateDistancevector, filename):
     with open(filename, 'w') as file:
         file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")
+        
 
         
 
