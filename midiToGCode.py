@@ -3,10 +3,10 @@ from mido import MidiFile
 import sys
 
 # Constants
-MIDIFILENAME = "sekritstuffboth.mid"
 FREQUENCYTOFEEDRATECONSTANT = 1
 TIMETODISTANCECONSTANT = 1
 BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
+STARTPOSITION = [0, 0, 0] # [X, Y, Z]
 
 # Global variables
 direction = [1,1,1] # [X, Y, Z]
@@ -71,8 +71,9 @@ def master(midifilename, gcodeFilename, startingCoordinates):
 # Generates gCode from feedrate and distance and saves it in filename
 def generateGCode(feedrateDistanceMatrix, filename):
     with open(filename, 'w') as file:
-        file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")
-        coordinates = [0, 0, 0]
+        file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")        
+        file.write(coordinatesToGCode_G0(STARTPOSITION, 3600) + "\n")
+        coordinates = STARTPOSITION
         for pair in feedrateDistanceMatrix:
             coordinates = calculateNewPosition(coordinates, translateDistanceToCoordinate(pair[1]))
             file.write(coordinatesToGCode_G0(coordinates, pair[0]))      
