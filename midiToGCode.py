@@ -5,10 +5,10 @@ from mido import MidiFile
 MIDIFILENAME = "sekritstuffboth.mid"
 FREQUENCYTOFEEDRATECONSTANT = 1
 TIMETODISTANCECONSTANT = 1
-BUILDING_AREA = [223, 223, 305]
+BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
 
 # Global variables
-direction = [1,1,1]
+direction = [1,1,1] # [X, Y, Z]
 
 # Converts from miditoneNumber to frequency
 def frequencyFromMidiNote(note):
@@ -22,8 +22,13 @@ def getFrequencyTimeMatrix(filename):
 def getFeedrateDistanceMatrix(frequencyTimeMatrix):
     return [[FREQUENCYTOFEEDRATECONSTANT*f, FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T] for f, T in frequencyTimeMatrix]
 
+# Converts distances to coordinates
 def translateFeedrateDistanceMatrixToCoordinates(feedrateDistanceMatrix):
-    return [[relX, 0,0] for feedrate, relX in feedrateDistanceMatrix] 
+    return [[relX, 0, 0] for feedrate, relX in feedrateDistanceMatrix]
+
+# Returns relative coordinate-vector from distance
+def translateDistanceToCoordinate(distance):
+    return [distance, 0, 0]
 
 # Takes inn old coordinates and relative coordinates and outputs new coordinate
 def calculateNewPosition(oldCoordinates[3], relCoordinates[3]):
@@ -48,7 +53,7 @@ def calculateNewPosition(oldCoordinates[3], relCoordinates[3]):
 #Takes in coordinatearray and feedrate and outputs gcode string
 def coordinatesToGCode_G0(newCoordinates[3], feedrate) 
     return gCodeLine = "G0 X"+str(newCoordinates[0])+" Y"+str(newCoordinate[1])+" Z"+str(newCoordinate[3])+" F"+str(feedrate)    
-
+'''
 def master(midifilename, gcodeFilename, startingCoordinates):
     feedrateDistanceMatrix = getFeedrateDistanceMatrix(getFrequencyTimeMatrix(midifilename))
     feedrateMatrix = [[feedrate] for feedrate, distanse in feedrateDistanceMatrix]
@@ -60,21 +65,23 @@ def master(midifilename, gcodeFilename, startingCoordinates):
         else:
             
             newPosition = calculateNewPosition(oldCoordinates[i], coordinates[i])
-
+'''
 
 # Generates gCode from feedrate and distance and saves it in filename
 def generateGCode(feedrateDistanceMatrix, filename):
     with open(filename, 'w') as file:
         file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")
-        ## ADD starting position in array[3]
+        coordinates = [0, 0, 0]
+        for pair in feedrateDistanceMatrix:
+            coordinates = calculateNewPosition(coordinates, translateDistanceToCoordinate(pair[1]))
+            file.write(coordinatesToGCode_G0(coordinates, pair[0]))      
 
         
-
 # Genretates gCode from midifile
 def generateGCodeFromMidi(midiFilename, gCodeFilename):
     movements = getFrequencyTimeMatrix(midiFilename)
     movements = getFeedrateDistanceMatrix(movements)
-    return generateGCode(movements, gCodeFilename)
+    generateGCode(movements, gCodeFilename)
 
 generateGCode(MIDIFILENAME, "a.gcode")
 print("gCode generated")
