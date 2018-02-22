@@ -32,7 +32,7 @@ def translateDistanceToCoordinate(distance):
     return [distance, 0, 0]
 
 # Takes inn old coordinates and relative coordinates and outputs new coordinate
-def calculateNewPosition(oldCoordinates[3], relCoordinates[3]):
+def calculateNewPosition(oldCoordinates, relCoordinates):
 
     newCoordinates = [oldCoordinates[0],oldCoordinates[1],oldCoordinates[2]]
 
@@ -49,11 +49,11 @@ def calculateNewPosition(oldCoordinates[3], relCoordinates[3]):
             newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
             if not(newCoordinates[i] < 0 and newCoordinates[i] > BUILDING_AREA[i]):
                 raise Exception("New position is outside of build area")
-    return newCoordinates[]
+    return newCoordinates
 
 #Takes in coordinatearray and feedrate and outputs gcode string
-def coordinatesToGCode_G0(newCoordinates[3], feedrate) 
-    return gCodeLine = "G0 X"+str(newCoordinates[0])+" Y"+str(newCoordinate[1])+" Z"+str(newCoordinate[3])+" F"+str(feedrate)    
+def coordinatesToGCode_G0(newCoordinates, feedrate):
+    return "G0 X"+str(newCoordinates[0])+" Y"+str(newCoordinate[1])+" Z"+str(newCoordinate[3])+" F"+str(feedrate)    
 '''
 def master(midifilename, gcodeFilename, startingCoordinates):
     feedrateDistanceMatrix = getFeedrateDistanceMatrix(getFrequencyTimeMatrix(midifilename))
@@ -94,13 +94,14 @@ def main():
 
     midFileExtension = getFileExtension(sys.argv[1])
     if midFileExtension.lower() != "mid":
-        print("Midifile had extension ." + midFileExtension + ", expected .mid")
+        print("MidiFilename argument had extension ." + midFileExtension + ", expected .mid")
         exit(1)
 
     gCodeFileExtension = getFileExtension(sys.argv[2])
-    if midFileExtension.lower() != "gcode":
-        print("Midifile had extension ." + midFileExtension + ", expected .gcode")
+    if gCodeFileExtension.lower() != "gcode":
+        print("GcodeFilename argument had extension ." + gCodeFileExtension + ", expected .gcode")
         exit(1)
+
     try:
         generateGCode(sys.argv[1], sys.argv[2])
         print("gCode generated")
