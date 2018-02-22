@@ -1,5 +1,6 @@
 # Imports
 from mido import MidiFile
+import sys
 
 # Constants
 MIDIFILENAME = "sekritstuffboth.mid"
@@ -83,5 +84,28 @@ def generateGCodeFromMidi(midiFilename, gCodeFilename):
     movements = getFeedrateDistanceMatrix(movements)
     generateGCode(movements, gCodeFilename)
 
-generateGCode(MIDIFILENAME, "a.gcode")
-print("gCode generated")
+def getFileExtension(filename):
+        return filename.split('.')[-1]
+
+def main():
+    if len(sys.argv) != 3:
+        print("midiToGCode requires two arguments: [midiFilename, gCodeFilename]")
+        exit(1)    
+
+    midFileExtension = getFileExtension(sys.argv[1])
+    if midFileExtension.lower() != "mid":
+        print("Midifile had extension ." + midFileExtension + ", expected .mid")
+        exit(1)
+
+    gCodeFileExtension = getFileExtension(sys.argv[2])
+    if midFileExtension.lower() != "gcode":
+        print("Midifile had extension ." + midFileExtension + ", expected .gcode")
+        exit(1)
+    try:
+        generateGCode(sys.argv[1], sys.argv[2])
+        print("gCode generated")
+    except:
+        print("Generation of gcode failed")
+        exit(1)    
+
+main()
