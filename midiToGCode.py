@@ -44,10 +44,10 @@ def calculateNewPosition(oldCoordinates, relCoordinates):
         
         newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
 
-        if (newCoordinates[i] >= 0 or newCoordinates[i] < BUILDING_AREA[i]):
+        if (newCoordinates[i] < 0 or newCoordinates[i] > BUILDING_AREA[i]):
             direction[i] *= -1
             newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
-            if not(newCoordinates[i] < 0 and newCoordinates[i] > BUILDING_AREA[i]):
+            if not(newCoordinates[i] >= 0 and newCoordinates[i] < BUILDING_AREA[i]):
                 raise Exception("New position is outside of build area")
     return newCoordinates
 
