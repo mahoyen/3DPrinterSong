@@ -3,10 +3,10 @@ from mido import MidiFile
 import sys
 
 # Constants
-FREQUENCYTOFEEDRATECONSTANT = 1
+FREQUENCYTOFEEDRATECONSTANT = 4
 TIMETODISTANCECONSTANT = 1
 BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
-STARTPOSITION = [10, 10, 10] # [X, Y, Z]
+STARTPOSITION = [100, 100, 100] # [X, Y, Z]
 
 # Global variables
 direction = [1,1,1] # [X, Y, Z]
