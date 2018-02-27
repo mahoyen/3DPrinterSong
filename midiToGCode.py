@@ -17,7 +17,19 @@ def frequencyFromMidiNote(note):
 
 # Returns all the frequencies and durations from all the tone in filename
 def getFrequencyTimeMatrix(filename):
-    return [[frequencyFromMidiNote(msg.note), msg.time] for msg in MidiFile(MIDIFILENAME).tracks[1] if (msg.type == "note_on")]
+    '''
+    frequencyTimeMatrix = list()
+    i = 0
+    for msg in MidiFile(filename).tracks[0]:
+        if (msg.type == "note_on"):
+            frequency = frequencyFromMidiNote(msg.note)
+            time = msg.time
+            frequencyTimeVector = [frequency, time]
+            print(frequencyTimeVector)
+            frequencyTimeMatrix[i] = frequencyTimeVector
+            i += 1
+    '''
+    return [[frequencyFromMidiNote(msg.note), msg.time] for msg in MidiFile(filename).tracks[0] if (msg.type == "note_on" and msg.time is not 0)  ]
 
 # Converts frequency and time into feedrate and distance
 def getFeedrateDistanceMatrix(frequencyTimeMatrix):
@@ -37,9 +49,9 @@ def calculateNewPosition(oldCoordinates, relCoordinates):
     newCoordinates = [oldCoordinates[0],oldCoordinates[1],oldCoordinates[2]]
 
     for i in range(3):
-        if not(oldCoordinates[i] >= 0 and oldCoordinates < BUILDING_AREA[i]):
+        if not(oldCoordinates[i] >= 0 and oldCoordinates[i] < BUILDING_AREA[i]):
             raise Exception("Position outside of build area")
-        if not(relCoordinates[i] >= 0 and relCoordinates < BUILDING_AREA[i]):
+        if not(relCoordinates[i] >= 0 and relCoordinates[i] < BUILDING_AREA[i]):
             raise Exception("Movement larger than build area or negativ")
         
         newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
@@ -75,8 +87,6 @@ def generateGCode(feedrateDistanceMatrix, filename):
         file.write(coordinatesToGCode_G0(STARTPOSITION, 3600) + "\n")
         coordinates = STARTPOSITION
         for pair in feedrateDistanceMatrix:
-            print(type(pair))
-            print(pair)
             coordinates = calculateNewPosition(coordinates, translateDistanceToCoordinate(pair[1]))
             file.write(coordinatesToGCode_G0(coordinates, pair[0]) + "\n")      
 
@@ -106,10 +116,10 @@ def main():
         exit(1)
 
     #try:
-    generateGCode(sys.argv[1], sys.argv[2])
+    generateGCodeFromMidi(sys.argv[1], sys.argv[2])
     print("gCode generated")
     #except Exception as e:
-    print("Generation of gcode failed "+str(e))
+    #print("Generation of gcode failed "+str(e))
     exit(1)    
 
 main()
