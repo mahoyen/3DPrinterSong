@@ -6,7 +6,7 @@ import sys
 FREQUENCYTOFEEDRATECONSTANT = 1
 TIMETODISTANCECONSTANT = 1
 BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
-STARTPOSITION = [0, 0, 0] # [X, Y, Z]
+STARTPOSITION = [10, 10, 10] # [X, Y, Z]
 
 # Global variables
 direction = [1,1,1] # [X, Y, Z]
