@@ -21,7 +21,7 @@ def getFrequencyTimeMatrix(filename):
 
 # Converts frequency and time into feedrate and distance
 def getFeedrateDistanceMatrix(frequencyTimeMatrix):
-    return [[FREQUENCYTOFEEDRATECONSTANT*f, FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T] for f, T in frequencyTimeMatrix]
+    return [[float(FREQUENCYTOFEEDRATECONSTANT*f), float(FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T)] for f, T in frequencyTimeMatrix]
 
 # Converts distances to coordinates
 def translateFeedrateDistanceMatrixToCoordinates(feedrateDistanceMatrix):
@@ -47,13 +47,13 @@ def calculateNewPosition(oldCoordinates, relCoordinates):
         if (newCoordinates[i] < 0 or newCoordinates[i] > BUILDING_AREA[i]):
             direction[i] *= -1
             newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
-            if not(newCoordinates[i] >= 0 and newCoordinates[i] =< BUILDING_AREA[i]):
+            if not(newCoordinates[i] >= 0 and newCoordinates[i] <= BUILDING_AREA[i]):
                 raise Exception("New position is outside of build area")
     return newCoordinates
 
 #Takes in coordinatearray and feedrate and outputs gcode string
 def coordinatesToGCode_G0(newCoordinates, feedrate):
-    return "G0 X"+str(newCoordinates[0])+" Y"+str(newCoordinate[1])+" Z"+str(newCoordinate[3])+" F"+str(feedrate)    
+    return "G0 X"+str(newCoordinates[0])+" Y"+str(newCoordinates[1])+" Z"+str(newCoordinates[2])+" F"+str(feedrate)    
 '''
 def master(midifilename, gcodeFilename, startingCoordinates):
     feedrateDistanceMatrix = getFeedrateDistanceMatrix(getFrequencyTimeMatrix(midifilename))
@@ -75,6 +75,8 @@ def generateGCode(feedrateDistanceMatrix, filename):
         file.write(coordinatesToGCode_G0(STARTPOSITION, 3600) + "\n")
         coordinates = STARTPOSITION
         for pair in feedrateDistanceMatrix:
+            print(type(pair))
+            print(pair)
             coordinates = calculateNewPosition(coordinates, translateDistanceToCoordinate(pair[1]))
             file.write(coordinatesToGCode_G0(coordinates, pair[0]) + "\n")      
 
@@ -103,11 +105,11 @@ def main():
         print("GcodeFilename argument had extension ." + gCodeFileExtension + ", expected .gcode")
         exit(1)
 
-    try:
-        generateGCode(sys.argv[1], sys.argv[2])
-        print("gCode generated")
-    except:
-        print("Generation of gcode failed")
-        exit(1)    
+    #try:
+    generateGCode(sys.argv[1], sys.argv[2])
+    print("gCode generated")
+    #except Exception as e:
+    print("Generation of gcode failed "+str(e))
+    exit(1)    
 
 main()
