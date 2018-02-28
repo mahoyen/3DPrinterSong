@@ -3,14 +3,14 @@ import mido
 
 
 
-miditextfile = open("test.csv", "w")
-mid = mido.MidiFile("MarbleMachineRightHand.mid")
+miditextfile = open("test.txt", "w")
+mid = mido.MidiFile("sekritstuffleft.mid")
 miditextfile.write(str(dt.datetime.now())+"\n")
 
 for i, track in enumerate(mid.tracks):
     print('Track {}: {}'.format(i, track.name))
     for msg in track:
-        miditextfile.write(str(msg) + ";")
+        miditextfile.write(str(msg) + "\n")
         print(msg)
 
 Hei = enumerate(mid.tracks)
