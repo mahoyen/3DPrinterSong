@@ -1,5 +1,6 @@
 *.gcode
 *.xlsx
 test.txt
+midofromMido.txt
 *.csv
 *.mid
