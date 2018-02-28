@@ -20,3 +20,10 @@ def getFrequencyTimeMatrix(filename):
             i += 1
     '''
     return [[frequencyFromMidiNote(msg.note), msg.time] for msg in MidiFile(filename).tracks[0] if (msg.type == "note_on" and msg.time is not 0)  ]
+
+def getDuration(track):
+    duration = 0
+    for msg in track:
+        if msg.type != "marker" and msg.type != "text":
+            duration += msg.time
+    return duration/480

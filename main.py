@@ -1,6 +1,7 @@
 # Imports
 import sys
 from MidiGcode import midi, gcode
+from mido import MidiFile
         
 # Genretates gCode from midifile
 def generateGCodeFromMidi(midiFilename, gCodeFilename):
@@ -33,4 +34,6 @@ def main():
     #print("Generation of gcode failed "+str(e))
     exit(1)    
 
-main()
+
+print(midi.getDuration(MidiFile("Midifiles/sekritstuffleft.mid").tracks[0]))
+# main()
