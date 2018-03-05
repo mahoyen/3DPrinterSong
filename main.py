@@ -34,6 +34,6 @@ def main():
     #print("Generation of gcode failed "+str(e))
     exit(1)    
 
-
+midi.cleanupTrack(MidiFile("Midifiles/sekritstuffleft.mid").tracks[0])
 print(midi.getDuration(MidiFile("Midifiles/sekritstuffleft.mid").tracks[0]))
 # main()

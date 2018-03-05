@@ -1,5 +1,6 @@
 # Imports
 from mido import MidiFile
+import datetime as dt
 
 # Converts from miditoneNumber to frequency
 def frequencyFromMidiNote(note):
@@ -27,3 +28,28 @@ def getDuration(track):
         if msg.type != "marker" and msg.type != "text":
             duration += msg.time
     return duration/480
+
+def printTrack(track, filename):
+    miditextfile = open(filename, "w")
+    miditextfile.write(str(dt.datetime.now())+"\n")
+
+    for msg in track:
+        try:
+            miditextfile.write("type=" + str(msg.type) + "\t note=" + str(msg.note) + "\t time=" + str(msg.time) + "\n")
+        except:
+            miditextfile.write(str(msg) + "\n")
+
+    miditextfile.close() 
+
+def cleanupTrack(track):
+    i = 0
+    length = len(track) - 1
+    while i < length:
+        if (track[i].type != "note_on" and track[i].type != "note_off"):
+            track[i + 1].time += track.pop(i).time
+            length -= 1
+        else:
+            i += 1
+    
+    track.pop(-1)
+
