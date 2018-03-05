@@ -56,6 +56,10 @@ def master(midifilename, gcodeFilename, startingCoordinates):
             newPosition = calculateNewPosition(oldCoordinates[i], coordinates[i])
 '''
 
+# Returns a gcode string to pause for given amount of milliseconds
+def timeDelayToGCode_G4(milliSeconds):
+    return "G4 P" + str(milliSeconds)
+
 # Generates gCode from feedrate and distance and saves it in filename
 def generateGCode(feedrateDistanceMatrix, filename):
     with open(filename, 'w') as file:
