@@ -1,7 +1,8 @@
 # Constants
-FREQUENCYTOFEEDRATECONSTANT = 4
+FREQUENCYTOFEEDRATECONSTANT = 1
 TIMETODISTANCECONSTANT = 1
-BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
+BUILDING_AREA_MAX = [223, 223, 305] # [X, Y, Z]
+BUILDING_AREA_MIN = [10, 10, 10]
 STARTPOSITION = [100, 100, 100] # [X, Y, Z]
 
 # Global variables
@@ -19,10 +20,17 @@ def translateFeedrateDistanceMatrixToCoordinates(feedrateDistanceMatrix):
 def translateDistanceToCoordinate(distance):
     return [distance, 0, 0]
 
+# Returns True if coordinate is inside build area
+def isCoordinateInside(coordinate):
+    for i in coordinate:
+        if i < BUILDING_AREA_MIN or i > BUILDING_AREA_MAX:
+            return False
+    return True
+
 # Takes inn old coordinates and relative coordinates and outputs new coordinate
 def calculateNewPosition(oldCoordinates, relCoordinates):
 
-    newCoordinates = [oldCoordinates[0],oldCoordinates[1],oldCoordinates[2]]
+    newCoordinates = list(oldCoordinates)
 
     for i in range(3):
         if not(oldCoordinates[i] >= 0 and oldCoordinates[i] < BUILDING_AREA[i]):
