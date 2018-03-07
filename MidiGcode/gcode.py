@@ -73,6 +73,7 @@ def generateGCode(feedrateDistanceMatrix, filename):
     with open(filename, 'w') as file:
         file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")        
         file.write(coordinatesToGCode_G0(STARTPOSITION, 3600) + "\n")
+        file.write(timeDelayToGCode_G4(1000) + "\n")
         coordinates = STARTPOSITION
         for pair in feedrateDistanceMatrix:
             coordinates = calculateNewPosition(coordinates, translateDistanceToCoordinate(pair[1]))
