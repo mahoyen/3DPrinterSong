@@ -6,8 +6,30 @@ import datetime as dt
 def frequencyFromMidiNote(note):
     return 440*2**((note - 69)/12)
 
+def pushQueue(queue, element):
+    queue.append(element)
+    return queue[-2:]
+
+
+# Returns list of 2-tuples of a list of notes and the duration. list[tuple(list[note 1, note 2], duration)]
+def getNotes(track):
+    returnList = {}
+    currentNotes = [0, 0]
+    for i, msg in enumerate(track):
+        if msg.type == "note_on":
+            currentNotes = pushQueue(currentNotes, msg.note)
+        elif msg.type == "note_off":
+            currentNotes[currentNotes.index(msg.note)] = 0
+        else:
+            raise ValueError("Message types should be note_on or note_off")
+
+        if track[i + 1].time == 0:
+            continue
+        returnList.append((currentNotes, track[i + 1].time))
+    return returnList
+
 # Returns all the frequencies and durations from all the tone in filename
-def getFrequencyTimeMatrix(filename):
+def getFrequencyTimeMatrix(filename):    
     return [[frequencyFromMidiNote(msg.note), msg.time] for msg in MidiFile(filename).tracks[0] if (msg.type == "note_on" and msg.time is not 0)  ]
 
 def getDuration(track):
