@@ -20,31 +20,31 @@ def translateFeedrateDistanceMatrixToCoordinates(feedrateDistanceMatrix):
 def translateDistanceToCoordinate(distance):
     return [distance, 0, 0]
 
-# Returns True if coordinate is inside build area
-def isCoordinateInside(coordinate):
+# Returns True if coordinate is outside build area
+def isCoordinateOutside(coordinate):
     for i in coordinate:
         if i < BUILDING_AREA_MIN or i > BUILDING_AREA_MAX:
-            return False
-    return True
+            return True
+    return False
 
 # Takes inn old coordinates and relative coordinates and outputs new coordinate
 def calculateNewPosition(oldCoordinates, relCoordinates):
+    # if isCoordinateOutside(relCoordinates): # This is wrong. If movement< build_area_min raises ValueError
+    #     raise ValueError("Movement larger than build area or negativ")    
+    if isCoordinateOutside(oldCoordinates):
+        raise ValueError("Position outside of build area")
 
     newCoordinates = list(oldCoordinates)
 
-    for i in range(3):
-        if not(oldCoordinates[i] >= 0 and oldCoordinates[i] < BUILDING_AREA[i]):
-            raise Exception("Position outside of build area")
-        if not(relCoordinates[i] >= 0 and relCoordinates[i] < BUILDING_AREA[i]):
-            raise Exception("Movement larger than build area or negativ")
-        
+    for i in range(3):        
         newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
 
-        if (newCoordinates[i] < 0 or newCoordinates[i] > BUILDING_AREA[i]):
+        if (newCoordinates[i] < BUILDING_AREA_MIN[i] or newCoordinates[i] > BUILDING_AREA_MAX[i]):
             direction[i] *= -1
             newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
-            if not(newCoordinates[i] >= 0 and newCoordinates[i] <= BUILDING_AREA[i]):
-                raise Exception("New position is outside of build area")
+
+    if (isCoordinateOutside(newCoordinates))
+        raise ValueError("New position is outside of build area")            
     return newCoordinates
 
 #Takes in coordinatearray and feedrate and outputs gcode string
