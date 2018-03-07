@@ -10,8 +10,7 @@ def pushQueue(queue, element):
     queue.append(element)
     return queue[-2:]
 
-
-# Returns list of 2-tuples of a list of notes and the duration. list[tuple(list[note 1, note 2], duration)]
+# Returns list of 2-tuples of a list of notes and the duration. list[list(list[note 1, note 2], duration)]
 def getNotes(track):
     returnList = {}
     currentNotes = [0, 0]
@@ -23,14 +22,27 @@ def getNotes(track):
         else:
             raise ValueError("Message types should be note_on or note_off")
 
-        if track[i + 1].time == 0:
-            continue
-        returnList.append((currentNotes, track[i + 1].time))
+        if track[i + 1].time != 0:
+            returnList.append([currentNotes, track[i + 1].time])
     return returnList
 
-# Returns all the frequencies and durations from all the tones in filename
+# Returns track with just note_on and note_off messages
+def cleanupTrack(track):
+    i = 0
+    length = len(track) - 1
+    while i < length:
+        if (track[i].type != "note_on" and track[i].type != "note_off"):
+            track[i + 1].time += track.pop(i).time
+            length -= 1
+        else:
+            i += 1
+    
+    track.pop(-1)
+
+# Returns all the frequencies and durations from all the tones in filename. list[list(list[freq 1, freq 2], duration)]
 def getFrequencyTimeMatrix(filename):
-    notes = getNotes(MidiFile(filename).tracks[0])
+    mid = MidiFile(filename).tracks[0]
+    notes = getNotes(cleanupTrack(mid))
     for msg in notes:
         for freq in msg[0]
             freq = frequencyFromMidiNote(freq)
@@ -55,17 +67,4 @@ def printTrack(track, filename):
         except:
             miditextfile.write(str(msg) + "\n")
 
-    miditextfile.close() 
-
-def cleanupTrack(track):
-    i = 0
-    length = len(track) - 1
-    while i < length:
-        if (track[i].type != "note_on" and track[i].type != "note_off"):
-            track[i + 1].time += track.pop(i).time
-            length -= 1
-        else:
-            i += 1
-    
-    track.pop(-1)
-
+    miditextfile.close()
