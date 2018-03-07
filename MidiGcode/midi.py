@@ -28,9 +28,15 @@ def getNotes(track):
         returnList.append((currentNotes, track[i + 1].time))
     return returnList
 
-# Returns all the frequencies and durations from all the tone in filename
-def getFrequencyTimeMatrix(filename):    
-    return [[frequencyFromMidiNote(msg.note), msg.time] for msg in MidiFile(filename).tracks[0] if (msg.type == "note_on" and msg.time is not 0)  ]
+# Returns all the frequencies and durations from all the tones in filename
+def getFrequencyTimeMatrix(filename):
+    notes = getNotes(MidiFile(filename).tracks[0])
+    for msg in notes:
+        for freq in msg[0]
+            freq = frequencyFromMidiNote(freq)
+
+    return notes
+    # return [[frequencyFromMidiNote(msg.note), msg.time] for msg in MidiFile(filename).tracks[0] if (msg.type == "note_on" and msg.time is not 0)  ]
 
 def getDuration(track):
     duration = 0
