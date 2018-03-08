@@ -57,7 +57,7 @@ def calculateNewPosition(oldCoordinates, relCoordinates):
 
         if (newCoordinates[i] < EPSILON[i] or newCoordinates[i] > BUILDING_AREA[i] - EPSILON[i]):
             #direction[i] *= -1
-            newCoordinates[i] = oldCoordinates[i] - relCoordinates[i]#*direction[i]
+            newCoordinates[i] = oldCoordinates[i] - relCoordinates[i] #*direction[i]
 
     if (isCoordinateOutside(newCoordinates)):        
         print(relCoordinates)
