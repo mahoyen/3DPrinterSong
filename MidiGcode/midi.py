@@ -43,7 +43,7 @@ def cleanupTrack(track):
     track.pop(-1)
     return track
 
-# Returns all the frequencies and durations from all the tones in filename. list[list(list[freq 1, freq 2], duration)]
+# Returns all the frequencies and durations from all the tones in filename. list[list(list[freq 1, freq 2, freq 3], duration)]
 def getFrequencyTimeMatrix(filename):
     mid = MidiFile(filename).tracks[0]
     notes = getNotes(cleanupTrack(mid))
