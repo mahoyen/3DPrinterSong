@@ -1,6 +1,6 @@
 # Constants
 FREQUENCYTOFEEDRATECONSTANT = 1
-TIMETODISTANCECONSTANT = 1
+TIMETODISTANCECONSTANT = 0.09
 BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
 EPSILON = [10, 10, 10] # [X, Y, Z]
 STARTPOSITION = [100, 100, 100] # [X, Y, Z]
@@ -11,14 +11,15 @@ direction = [1,1,1] # [X, Y, Z]
 
 # Converts distances to coordinates. returns list[list[list[x, y, z], feedrate]]
 def translateFrequencyTimeMatrixToCoordinates(frequencyTimeMatrix):
-    coordinateList = {}
-    for frequencies, duration in frequencyTimeMatrix:
+    coordinateList = list()
+    for frequencies, time in frequencyTimeMatrix:
         sumFeedrate = 0
-        feedrates = list()
-        for i in range(len(freqncies)):
-            feedrates[i] = FREQUENCYTOFEEDRATECONSTANT * freq
-            sumFeedrate += feedrate**2
+        feedrates = list(frequencies)
+        for i in range(len(frequencies)):
+            feedrates[i] = FREQUENCYTOFEEDRATECONSTANT * frequencies[i]
+            sumFeedrate += feedrates[i]**2
         absoluteFeedrate = sumFeedrate**0.5
+        duration = TIMETODISTANCECONSTANT*absoluteFeedrate/time
         coordinateList.append([[feedrate*duration for feedrate in feedrates], absoluteFeedrate])
     
     return coordinateList
@@ -31,7 +32,7 @@ def translateFrequencyTimeMatrixToCoordinates(frequencyTimeMatrix):
 # Returns true if all notes in noteList are zero
 def isSilent(noteList):
     for i in noteList:
-        if i:
+        if i != 0:
             return False
     return True
 
@@ -45,7 +46,7 @@ def isCoordinateOutside(coordinate):
 # Takes inn old coordinates and relative coordinates and outputs new coordinate
 def calculateNewPosition(oldCoordinates, relCoordinates):
     # if isCoordinateOutside(relCoordinates): # This is wrong. If movement< build_area_min raises ValueError
-    #     raise ValueError("Movement larger than build area or negativ")    
+    #     raise ValueError("Movement larger than build area or negativ")
     if isCoordinateOutside(oldCoordinates):
         raise ValueError("Position outside of build area")
 
@@ -58,7 +59,10 @@ def calculateNewPosition(oldCoordinates, relCoordinates):
             direction[i] *= -1
             newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
 
-    if (isCoordinateOutside(newCoordinates)):
+    if (isCoordinateOutside(newCoordinates)):        
+        print(relCoordinates)
+        print(oldCoordinates)
+        print(newCoordinates)
         raise ValueError("New position is outside of build area")            
     return newCoordinates
 
@@ -68,16 +72,18 @@ def coordinateToGCode_G0(newCoordinates, feedrate):
 
 # Returns a gcode string to pause for given amount of milliseconds
 def timeDelayToGCode_G4(milliSeconds):
-    return "G4 P" + str(milliSeconds)
+    if milliSeconds:
+        return "G4 P" + str(milliSeconds) + "\n"
+    return ""
 
 # Generates gCode from feedrate and distance and saves it in filename
-def generateGCode(feedrateDistanceMatrix, filename):
+def generateGCode(relativeCoordinates, filename):
     with open(filename, 'w') as file:
         file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")        
-        file.write(coordinatesToGCode_G0(STARTPOSITION, 3600) + "\n")
-        file.write(timeDelayToGCode_G4(1000) + "\n")
+        file.write(coordinateToGCode_G0(STARTPOSITION, 3600) + "\n")
+        file.write(timeDelayToGCode_G4(1000))
         coordinate = STARTPOSITION
-        for pair in translateFeedrateDistanceMatrixToCoordinates(feedrateDistanceMatrix):
+        for pair in relativeCoordinates:
             if (isSilent(pair[0])):
                 file.write(timeDelayToGCode_G4(pair[1]))
             else:

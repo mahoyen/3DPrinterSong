@@ -6,8 +6,8 @@ from mido import MidiFile
 # Genretates gCode from midifile
 def generateGCodeFromMidi(midiFilename, gCodeFilename):
     frequencyTimeMatrix = midi.getFrequencyTimeMatrix(midiFilename)
-    feedrateDistanceMatrix = gcode.getFeedrateDistanceMatrix(frequencyTimeMatrix)
-    gcode.generateGCode(feedrateDistanceMatrix, gCodeFilename)
+    coordinates = gcode.translateFrequencyTimeMatrixToCoordinates(frequencyTimeMatrix)
+    gcode.generateGCode(coordinates, gCodeFilename)
 
 def getFileExtension(filename):
         return filename.split('.')[-1]
@@ -32,8 +32,6 @@ def main():
     print("gCode generated")
     #except Exception as e:
     #print("Generation of gcode failed "+str(e))
-    exit(1)    
+    exit(1)
 
-mid = MidiFile("Midifiles/sekritstuffleft.mid")
-midi.cleanupTrack(mid.tracks[0])
-mid.save("leftCleanedup.mid")
+main()

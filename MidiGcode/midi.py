@@ -12,18 +12,21 @@ def pushQueue(queue, element):
 
 # Returns list of 2-tuples of a list of notes and the duration. list[list(list[note 1, note 2], duration)]
 def getNotes(track):
-    returnList = {}
+    returnList = list()
     currentNotes = [0, 0]
-    for i, msg in enumerate(track):
+    for i, msg in enumerate(track[:-1]):
         if msg.type == "note_on":
             currentNotes = pushQueue(currentNotes, msg.note)
         elif msg.type == "note_off":
-            currentNotes[currentNotes.index(msg.note)] = 0
+            try:
+                currentNotes[currentNotes.index(msg.note)] = 0
+            except:
+                print(str(msg.note) + " not currently playing")
         else:
             raise ValueError("Message types should be note_on or note_off")
 
         if track[i + 1].time != 0:
-            returnList.append([currentNotes, track[i + 1].time])
+            returnList.append([[currentNotes[0], currentNotes[1], 0], track[i + 1].time/480])
     return returnList
 
 # Returns track with just note_on and note_off messages
@@ -38,6 +41,7 @@ def cleanupTrack(track):
             i += 1
     
     track.pop(-1)
+    return track
 
 # Returns all the frequencies and durations from all the tones in filename. list[list(list[freq 1, freq 2], duration)]
 def getFrequencyTimeMatrix(filename):
