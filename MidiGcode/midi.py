@@ -48,7 +48,6 @@ def getFrequencyTimeMatrix(filename):
             freq = frequencyFromMidiNote(freq)
 
     return notes
-    # return [[frequencyFromMidiNote(msg.note), msg.time] for msg in MidiFile(filename).tracks[0] if (msg.type == "note_on" and msg.time is not 0)  ]
 
 def getDuration(track):
     duration = 0
