@@ -21,7 +21,7 @@ def isSilent(noteList):
 
 # Returns list of 2-tuples of a list of notes and the duration. list[list(list[note 1, note 2], duration)]
 def getNotesTimeMatrix(track):
-    returnList = list()
+    notesTimeMatrix = list()
     currentNotes = [0, 0]
     for i, msg in enumerate(track[:-1]):
         if msg.type == "note_on":
@@ -36,8 +36,8 @@ def getNotesTimeMatrix(track):
             raise ValueError("Message types should be note_on or note_off")
 
         if track[i + 1].time != 0:
-            returnList.append([[currentNotes[0], currentNotes[1], 0], track[i + 1].time/480])
-    return returnList
+            notesTimeMatrix.append([[currentNotes[0], currentNotes[1], 0], track[i + 1].time/480])
+    return notesTimeMatrix
 
 # Returns track with just note_on and note_off messages
 def cleanupTrack(track):
@@ -53,7 +53,7 @@ def cleanupTrack(track):
     track.pop(-1)
     return track
 
-# Returns all the frequencies and durations from all the tones in filename. list[list(list[freq 1, freq 2, freq3], duration)]
+# Returns all the frequencies and durations from all the tones in filename. list[list(list[freq 1, freq 2, freq 3], duration)]
 def getFrequencyTimeMatrix(filename):
     mid = MidiFile(filename).tracks[0]
     notesTimeMatrix = getNotesTimeMatrix(cleanupTrack(mid))    
