@@ -12,7 +12,7 @@ def pushQueue(queue, element):
 
 # Returns list of 2-tuples of a list of notes and the duration. list[list(list[note 1, note 2], duration)]
 def getNotes(track):
-    returnList = list()
+    notesTimeMatrix = list()
     currentNotes = [0, 0]
     for i, msg in enumerate(track[:-1]):
         if msg.type == "note_on":
@@ -26,8 +26,8 @@ def getNotes(track):
             raise ValueError("Message types should be note_on or note_off")
 
         if track[i + 1].time != 0:
-            returnList.append([[currentNotes[0], currentNotes[1], 0], track[i + 1].time/480])
-    return returnList
+            notesTimeMatrix.append([[currentNotes[0], currentNotes[1], 0], track[i + 1].time/480])
+    return notesTimeMatrix
 
 # Returns track with just note_on and note_off messages
 def cleanupTrack(track):
