@@ -5,9 +5,9 @@ from mido import MidiFile
         
 # Genretates gCode from midifile
 def generateGCodeFromMidi(midiFilename, gCodeFilename):
-    movements = midi.getFrequencyTimeMatrix(midiFilename)
-    movements = gcode.getFeedrateDistanceMatrix(movements)
-    gcode.generateGCode(movements, gCodeFilename)
+    frequencyTimeMatrix = midi.getFrequencyTimeMatrix(midiFilename)
+    feedrateDistanceMatrix = gcode.getFeedrateDistanceMatrix(frequencyTimeMatrix)
+    gcode.generateGCode(feedrateDistanceMatrix, gCodeFilename)
 
 def getFileExtension(filename):
         return filename.split('.')[-1]
