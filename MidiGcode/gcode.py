@@ -8,9 +8,6 @@ STARTPOSITION = [100, 100, 100] # [X, Y, Z]
 # Global variables
 direction = [1,1,1] # [X, Y, Z]
 
-# Converts frequency and time into feedrate and distance
-def getFeedrateDistanceMatrix(frequencyTimeMatrix):
-    return [[float(FREQUENCYTOFEEDRATECONSTANT*fi) for fi in f], float(FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T)] for f, T in frequencyTimeMatrix]
 
 # Converts distances to coordinates. returns list[list[list[x, y, z], feedrate]]
 def translateFrequencyTimeMatrixToCoordinates(frequencyTimeMatrix):
@@ -61,7 +58,7 @@ def calculateNewPosition(oldCoordinates, relCoordinates):
             direction[i] *= -1
             newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
 
-    if (isCoordinateOutside(newCoordinates))
+    if (isCoordinateOutside(newCoordinates)):
         raise ValueError("New position is outside of build area")            
     return newCoordinates
 

@@ -44,7 +44,7 @@ def getFrequencyTimeMatrix(filename):
     mid = MidiFile(filename).tracks[0]
     notes = getNotes(cleanupTrack(mid))
     for msg in notes:
-        for freq in msg[0]
+        for freq in msg[0]:
             freq = frequencyFromMidiNote(freq)
 
     return notes
