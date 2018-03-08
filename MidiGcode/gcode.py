@@ -1,3 +1,5 @@
+import midi
+
 # Constants
 FREQUENCYTOFEEDRATECONSTANT = 1
 TIMETODISTANCECONSTANT = 0.09
@@ -29,12 +31,6 @@ def translateFrequencyTimeMatrixToCoordinates(frequencyTimeMatrix):
 # def translateDistanceToCoordinate(distance):
 #     return [distance, 0, 0]
 
-# Returns true if all notes in noteList are zero
-def isSilent(noteList):
-    for i in noteList:
-        if i != 0:
-            return False
-    return True
 
 # Returns True if coordinate is outside build area
 def isCoordinateOutside(coordinate):
@@ -84,7 +80,7 @@ def generateGCode(relativeCoordinates, filename):
         file.write(timeDelayToGCode_G4(1000))
         coordinate = STARTPOSITION
         for pair in relativeCoordinates:
-            if (isSilent(pair[0])):
+            if (mdid.isSilent(pair[0])):
                 file.write(timeDelayToGCode_G4(pair[1]))
             else:
                 coordinate = calculateNewPosition(coordinate, pair[0])
