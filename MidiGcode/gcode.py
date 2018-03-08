@@ -1,4 +1,7 @@
-# Constants
+import midi
+
+# Constants 
+
 FREQUENCYTOFEEDRATECONSTANT = 1
 TIMETODISTANCECONSTANT = 0.09
 BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
@@ -9,32 +12,23 @@ STARTPOSITION = [100, 100, 100] # [X, Y, Z]
 direction = [1,1,1] # [X, Y, Z]
 
 
-# Converts distances to coordinates. returns list[list[list[x, y, z], feedrate]]
-def translateFrequencyTimeMatrixToCoordinates(frequencyTimeMatrix):
-    coordinateList = list()
+# Converts frequencies returns list[list[list[feedrateX, feedrateY, feedrateZ], feedrate]]
+def translateFrequencyTimeMatrixToFeedratesTimeMatrix(frequencyTimeMatrix):
+    feedrateTimeMatrix = list()
     for frequencies, time in frequencyTimeMatrix:
-        sumFeedrate = 0
         feedrates = list(frequencies)
         for i in range(len(frequencies)):
             feedrates[i] = FREQUENCYTOFEEDRATECONSTANT * frequencies[i]
-            sumFeedrate += feedrates[i]**2
-        absoluteFeedrate = sumFeedrate**0.5
-        duration = TIMETODISTANCECONSTANT*absoluteFeedrate/time
-        coordinateList.append([[feedrate*duration for feedrate in feedrates], absoluteFeedrate])
+        feedrateTimeMatrix.append([feedrates, time])
     
-    return coordinateList
-    # return [[relX, 0, 0] for feedrate, relX in feedrateDistanceMatrix]
-
-# Returns relative coordinate-vector from distance
-# def translateDistanceToCoordinate(distance):
-#     return [distance, 0, 0]
-
-# Returns true if all notes in noteList are zero
-def isSilent(noteList):
-    for i in noteList:
-        if i != 0:
-            return False
-    return True
+    return feedrateTimeMatrix
+    
+#Takes feedratelist and returns absolutelength the list  
+def calculateAbsoluteFeedrate(feedrates):
+    sumFeedrateSquared = 0
+    for i in range(len(feedrates)):
+        sumFeedrateSquared += feedrates[i]**2
+    return sumFeedrateSquared**0.5
 
 # Returns True if coordinate is outside build area
 def isCoordinateOutside(coordinate):
@@ -53,11 +47,11 @@ def calculateNewPosition(oldCoordinates, relCoordinates):
     newCoordinates = list(oldCoordinates)
 
     for i in range(3):        
-        newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
+        newCoordinates[i] = oldCoordinates[i] + relCoordinates[i] #*direction[i]
 
         if (newCoordinates[i] < EPSILON[i] or newCoordinates[i] > BUILDING_AREA[i] - EPSILON[i]):
-            direction[i] *= -1
-            newCoordinates[i] = oldCoordinates[i] + relCoordinates[i]*direction[i]
+            #direction[i] *= -1
+            newCoordinates[i] = oldCoordinates[i] - relCoordinates[i] #*direction[i]
 
     if (isCoordinateOutside(newCoordinates)):        
         print(relCoordinates)
@@ -76,16 +70,22 @@ def timeDelayToGCode_G4(milliSeconds):
         return "G4 P" + str(milliSeconds) + "\n"
     return ""
 
-# Generates gCode from feedrate and distance and saves it in filename
-def generateGCode(relativeCoordinates, filename):
+ def calculateRelCoordinates(feedrates, time):
+    RelCoordinates = list(feedrates)
+    for i in range(len(feedrates):
+        RelCoordinates[i] = feedrates[i]*time
+    return RelCoordinates
+
+# Generates gCode from feedrate and time and saves it in filename
+def generateGCode(feedratesTimeMatrix, filename):
     with open(filename, 'w') as file:
         file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")        
         file.write(coordinateToGCode_G0(STARTPOSITION, 3600) + "\n")
         file.write(timeDelayToGCode_G4(1000))
-        coordinate = STARTPOSITION
-        for pair in relativeCoordinates:
-            if (isSilent(pair[0])):
-                file.write(timeDelayToGCode_G4(pair[1]))
+        oldCoordinate = STARTPOSITION
+        for feedrates, time in feedratesTimeMatrix:
+            if (mdid.isSilent(feedrates)):
+                file.write(timeDelayToGCode_G4(time))
             else:
-                coordinate = calculateNewPosition(coordinate, pair[0])
-                file.write(coordinateToGCode_G0(coordinate, pair[1]) + "\n")
+                coordinate = calculateNewPosition(oldCoordinate, coordinates)
+                file.write(coordinateToGCode_G0(coordinate, feedrate) + "\n")
