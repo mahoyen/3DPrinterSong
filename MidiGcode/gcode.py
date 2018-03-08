@@ -1,9 +1,9 @@
 # Constants
-FREQUENCYTOFEEDRATECONSTANT = 1
+FREQUENCYTOFEEDRATECONSTANT = 0.1
 TIMETODISTANCECONSTANT = 0.09
 BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
 EPSILON = [10, 10, 10] # [X, Y, Z]
-STARTPOSITION = [100, 100, 100] # [X, Y, Z]
+STARTPOSITION = [10, 10, 100] # [X, Y, Z]
 
 # Global variables
 direction = [1,1,1] # [X, Y, Z]
@@ -51,6 +51,7 @@ def calculateNewPosition(oldCoordinates, relCoordinates):
         raise ValueError("Position outside of build area")
 
     newCoordinates = list(oldCoordinates)
+    print(relCoordinates)
 
     for i in range(3):        
         newCoordinates[i] = oldCoordinates[i] + relCoordinates[i] #*direction[i]

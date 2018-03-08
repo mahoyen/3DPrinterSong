@@ -4,6 +4,8 @@ import datetime as dt
 
 # Converts from miditoneNumber to frequency
 def frequencyFromMidiNote(note):
+    if (note == 0):
+        return 0
     return 440*2**((note - 69)/12)
 
 def pushQueue(queue, element):
@@ -11,7 +13,7 @@ def pushQueue(queue, element):
     return queue[-2:]
 
 # Returns list of 2-tuples of a list of notes and the duration. list[list(list[note 1, note 2], duration)]
-def getNotes(track):
+def getNotesTimeMatrix(track):
     returnList = list()
     currentNotes = [0, 0]
     for i, msg in enumerate(track[:-1]):
@@ -21,7 +23,8 @@ def getNotes(track):
             try:
                 currentNotes[currentNotes.index(msg.note)] = 0
             except:
-                print(str(msg.note) + " not currently playing")
+                pass
+                # print(str(msg.note) + " not currently playing")
         else:
             raise ValueError("Message types should be note_on or note_off")
 
@@ -43,15 +46,19 @@ def cleanupTrack(track):
     track.pop(-1)
     return track
 
-# Returns all the frequencies and durations from all the tones in filename. list[list(list[freq 1, freq 2], duration)]
+# Returns all the frequencies and durations from all the tones in filename. list[list(list[freq 1, freq 2, freq3], duration)]
 def getFrequencyTimeMatrix(filename):
     mid = MidiFile(filename).tracks[0]
-    notes = getNotes(cleanupTrack(mid))
-    for msg in notes:
-        for freq in msg[0]:
-            freq = frequencyFromMidiNote(freq)
+    notesTimeMatrix = getNotesTimeMatrix(cleanupTrack(mid))    
 
-    return notes
+    frequencyTimeMatrix = []
+    for noteLine in notesTimeMatrix:
+        freqLine = list(noteLine)
+        for i in range(len(noteLine[0])):
+            freqLine[0][i] = frequencyFromMidiNote(noteLine[0][i])
+        frequencyTimeMatrix.append(freqLine)    
+    
+    return frequencyTimeMatrix
 
 def getDuration(track):
     duration = 0
