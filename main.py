@@ -6,7 +6,10 @@ from mido import MidiFile
 # Genretates gCode from midifile
 def generateGCodeFromMidi(midiFilename, gCodeFilename):
     frequencyTimeMatrix = midi.getFrequencyTimeMatrix(midiFilename)
+    print(frequencyTimeMatrix)
     coordinates = gcode.translateFrequencyTimeMatrixToCoordinates(frequencyTimeMatrix)
+    print("\n\n")
+    print(coordinates)
     gcode.generateGCode(coordinates, gCodeFilename)
 
 def getFileExtension(filename):
