@@ -1,10 +1,10 @@
 # Constants 
 
-FREQUENCYTOFEEDRATECONSTANT = 1
-TIMETODISTANCECONSTANT = 0.09
+FREQUENCYTOFEEDRATECONSTANT = 0.1
+TIMETODISTANCECONSTANT = 1
 BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
 EPSILON = [10, 10, 10] # [X, Y, Z]
-STARTPOSITION = [100, 100, 100] # [X, Y, Z]
+STARTPOSITION = [210, 210, 100] # [X, Y, Z]
 
 # Global variables
 direction = [1,1,1] # [X, Y, Z]
@@ -75,10 +75,10 @@ def timeDelayToGCode_G4(milliSeconds):
     return ""
 
 def calculateRelCoordinates(feedrates, time):
-    RelCoordinates = list(feedrates)
+    relCoordinates = list(feedrates)
     for i in range(len(feedrates)):
-        RelCoordinates[i] = feedrates[i]*time
-    return RelCoordinates
+        relCoordinates[i] = feedrates[i]*time*TIMETODISTANCECONSTANT
+    return relCoordinates
 
 # Generates gCode from feedrate and time and saves it in filename
 def generateGCode(feedratesTimeMatrix, filename):
