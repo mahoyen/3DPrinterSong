@@ -1,16 +1,20 @@
-import midi
-
 # Constants 
 
 FREQUENCYTOFEEDRATECONSTANT = 1
 TIMETODISTANCECONSTANT = 0.09
 BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
 EPSILON = [10, 10, 10] # [X, Y, Z]
-STARTPOSITION = [10, 10, 100] # [X, Y, Z]
+STARTPOSITION = [100, 100, 100] # [X, Y, Z]
 
 # Global variables
 direction = [1,1,1] # [X, Y, Z]
 
+# Returns true if all notes in noteList are zero
+def isAllZeros(liste):
+    for i in liste:
+        if i != 0:
+            return False
+    return True
 
 # Converts frequencies returns list[list[list[feedrateX, feedrateY, feedrateZ], feedrate]]
 def translateFrequencyTimeMatrixToFeedratesTimeMatrix(frequencyTimeMatrix):
@@ -45,7 +49,6 @@ def calculateNewPosition(oldCoordinates, relCoordinates):
         raise ValueError("Position outside of build area")
 
     newCoordinates = list(oldCoordinates)
-    print(relCoordinates)
 
     for i in range(3):        
         newCoordinates[i] = oldCoordinates[i] + relCoordinates[i] #*direction[i]
@@ -85,7 +88,7 @@ def generateGCode(feedratesTimeMatrix, filename):
         file.write(timeDelayToGCode_G4(1000))
         oldCoordinates = STARTPOSITION
         for feedrates, time in feedratesTimeMatrix:
-            if (mdid.isSilent(feedrates)):
+            if (isAllZeros(feedrates)):
                 file.write(timeDelayToGCode_G4(time))
             else:
                 relCoordinates = calculateRelCoordinates(feedrates, time)

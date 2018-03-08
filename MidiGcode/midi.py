@@ -12,13 +12,6 @@ def pushQueue(queue, element):
     queue.append(element)
     return queue[-2:]
 
-# Returns true if all notes in noteList are zero
-def isSilent(noteList):
-    for i in noteList:
-        if i != 0:
-            return False
-    return True
-
 # Returns list of 2-tuples of a list of notes and the duration. list[list(list[note 1, note 2], duration)]
 def getNotesTimeMatrix(track):
     notesTimeMatrix = list()

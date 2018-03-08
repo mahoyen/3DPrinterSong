@@ -6,23 +6,11 @@ from mido import MidiFile
 # Genretates gCode from midifile
 def generateGCodeFromMidi(midiFilename, gCodeFilename):
     frequencyTimeMatrix = midi.getFrequencyTimeMatrix(midiFilename)
-<<<<<<< HEAD
-    #print("Frequency, Time")
-    #for line in frequencyTimeMatrix:
-    #    print(line[0], line[1])
-    coordinates = gcode.translateFrequencyTimeMatrixToCoordinates(frequencyTimeMatrix)
-    #print("Relative Coordinates")
-    #for c in coordinates:
-    #    print(c[0], c[1], sep='\t')
-
-    gcode.generateGCode(coordinates, gCodeFilename)
-=======
     print(frequencyTimeMatrix)
     feedratesTimeMatrix = gcode.translateFrequencyTimeMatrixToFeedratesTimeMatrix(frequencyTimeMatrix)
     print("\n\n")
     print(feedratesTimeMatrix)
     gcode.generateGCode(feedratesTimeMatrix, gCodeFilename)
->>>>>>> restructering-translatefrequencyTimeMatrixToCoordinates
 
 def getFileExtension(filename):
         return filename.split('.')[-1]
