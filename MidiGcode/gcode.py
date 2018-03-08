@@ -13,12 +13,16 @@ def getFeedrateDistanceMatrix(frequencyTimeMatrix):
     return [[float(FREQUENCYTOFEEDRATECONSTANT*f), float(FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T)] for f, T in frequencyTimeMatrix]
 
 # Converts distances to coordinates. returns list[list[list[x, y, z], feedrate]]
-def translateFeedrateDistanceMatrixToCoordinates(feedrateDistanceMatrix):
+def translateFrequencyTimeMatrixToCoordinates(frequencyTimeMatrix):
     coordinateList = {}
-    for feedrates, distance in feedrateDistanceMatrix:
-        absoluteFeedrate = sum([i**2 for i in feedrates])**0.5
-        duration = distance/absoluteFeedrate
-        coordinateList.append([[i*duration for i in feedrates], absoluteFeedrate])
+    for frequencies, duration in frequencyTimeMatrix:
+        sumFeedrate = 0
+        feedrates = list()
+        for i in range(len(freqncies)):
+            feedrates[i] = FREQUENCYTOFEEDRATECONSTANT * freq
+            sumFeedrate += feedrate**2
+        absoluteFeedrate = sumFeedrate**0.5
+        coordinateList.append([[feedrate*duration for feedrate in feedrates], absoluteFeedrate])
     
     return coordinateList
     # return [[relX, 0, 0] for feedrate, relX in feedrateDistanceMatrix]
