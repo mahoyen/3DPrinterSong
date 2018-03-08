@@ -57,11 +57,13 @@ def calculateNewPosition(oldCoordinates, relCoordinates):
             #direction[i] *= -1
             newCoordinates[i] = oldCoordinates[i] - relCoordinates[i] #*direction[i]
 
-    if (isCoordinateOutside(newCoordinates)):        
-        print(relCoordinates)
-        print(oldCoordinates)
-        print(newCoordinates)
-        raise ValueError("New position is outside of build area")            
+            if (newCoordinates[i] < EPSILON[i]):
+                newCoordinates[i] = EPSILON[i]
+            elif (newCoordinates[i] > BUILDING_AREA[i] - EPSILON[i]):
+                newCoordinates[i] = BUILDING_AREA[i] - EPSILON[i]
+
+
+
     return newCoordinates
 
 #Takes in coordinatearray and feedrate and returns gcode string
