@@ -13,6 +13,7 @@ def generateGCodeFromMidi(midiFilename, gCodeFilename):
     #print("Relative Coordinates")
     #for c in coordinates:
     #    print(c[0], c[1], sep='\t')
+
     gcode.generateGCode(coordinates, gCodeFilename)
 
 def getFileExtension(filename):
