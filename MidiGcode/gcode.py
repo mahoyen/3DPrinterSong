@@ -10,7 +10,7 @@ direction = [1,1,1] # [X, Y, Z]
 
 # Converts frequency and time into feedrate and distance
 def getFeedrateDistanceMatrix(frequencyTimeMatrix):
-    return [[float(FREQUENCYTOFEEDRATECONSTANT*f), float(FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T)] for f, T in frequencyTimeMatrix]
+    return [[float(FREQUENCYTOFEEDRATECONSTANT*fi) for fi in f], float(FREQUENCYTOFEEDRATECONSTANT*TIMETODISTANCECONSTANT*f/T)] for f, T in frequencyTimeMatrix]
 
 # Converts distances to coordinates. returns list[list[list[x, y, z], feedrate]]
 def translateFeedrateDistanceMatrixToCoordinates(feedrateDistanceMatrix):
