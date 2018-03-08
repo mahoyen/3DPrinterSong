@@ -11,7 +11,7 @@ def pushQueue(queue, element):
     return queue[-2:]
 
 # Returns list of 2-tuples of a list of notes and the duration. list[list(list[note 1, note 2], duration)]
-def getNotes(track):
+def getNotesTimeMatrix(track):
     notesTimeMatrix = list()
     currentNotes = [0, 0]
     for i, msg in enumerate(track[:-1]):
