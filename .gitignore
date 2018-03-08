@@ -2,6 +2,6 @@
 *.xlsx
 test.txt
 *.csv
-*.mid
+.mid
 *.pyc
 .vscode
