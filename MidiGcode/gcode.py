@@ -70,9 +70,9 @@ def timeDelayToGCode_G4(milliSeconds):
         return "G4 P" + str(milliSeconds) + "\n"
     return ""
 
- def calculateRelCoordinates(feedrates, time):
+def calculateRelCoordinates(feedrates, time):
     RelCoordinates = list(feedrates)
-    for i in range(len(feedrates):
+    for i in range(len(feedrates)):
         RelCoordinates[i] = feedrates[i]*time
     return RelCoordinates
 
@@ -90,5 +90,5 @@ def generateGCode(feedratesTimeMatrix, filename):
                 relCoordinates = calculateRelCoordinates(feedrates, time)
                 absoluteFeedrate = calculateAbsoluteFeedrate(feedrates)
                 newCoordinates = calculateNewPosition(oldCoordinates, relCoordinates)
-                file.write(coordinateToGCode_G0(newCoordinate, absoluteFeedrate) + "\n")
+                file.write(coordinateToGCode_G0(newCoordinates, absoluteFeedrate) + "\n")
                 oldCoordinates = newCoordinates
