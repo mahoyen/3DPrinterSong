@@ -82,10 +82,13 @@ def generateGCode(feedratesTimeMatrix, filename):
         file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")        
         file.write(coordinateToGCode_G0(STARTPOSITION, 3600) + "\n")
         file.write(timeDelayToGCode_G4(1000))
-        oldCoordinate = STARTPOSITION
+        oldCoordinates = STARTPOSITION
         for feedrates, time in feedratesTimeMatrix:
             if (mdid.isSilent(feedrates)):
                 file.write(timeDelayToGCode_G4(time))
             else:
-                coordinate = calculateNewPosition(oldCoordinate, coordinates)
-                file.write(coordinateToGCode_G0(coordinate, feedrate) + "\n")
+                relCoordinates = calculateRelCoordinates(feedrates, time)
+                absoluteFeedrate = calculateAbsoluteFeedrate(feedrates)
+                newCoordinates = calculateNewPosition(oldCoordinates, relCoordinates)
+                file.write(coordinateToGCode_G0(newCoordinate, absoluteFeedrate) + "\n")
+                oldCoordinates = newCoordinates
