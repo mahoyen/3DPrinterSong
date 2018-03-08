@@ -27,10 +27,6 @@ def translateFrequencyTimeMatrixToCoordinates(frequencyTimeMatrix):
     return coordinateList
     # return [[relX, 0, 0] for feedrate, relX in feedrateDistanceMatrix]
 
-# Returns relative coordinate-vector from distance
-# def translateDistanceToCoordinate(distance):
-#     return [distance, 0, 0]
-
 
 # Returns True if coordinate is outside build area
 def isCoordinateOutside(coordinate):
