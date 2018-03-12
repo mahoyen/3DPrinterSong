@@ -1,7 +1,7 @@
 # Constants 
 
-FREQUENCYTOFEEDRATECONSTANT = 7
-TIMETODISTANCECONSTANT = 0.07
+FREQUENCYTOFEEDRATECONSTANT = 14
+TIMETODISTANCECONSTANT = 0.5
 BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
 EPSILON = [10, 10, 10] # [X, Y, Z]
 STARTPOSITION = [210, 210, 100] # [X, Y, Z]
@@ -73,7 +73,7 @@ def coordinateToGCode_G0(newCoordinates, feedrate):
 # Returns a gcode string to pause for given amount of milliseconds
 def timeDelayToGCode_G4(milliSeconds):
     if milliSeconds:
-        return "G4 P" + str(milliSeconds) + "\n"
+        return "G4 S" + str(milliSeconds) + "\n"
     return ""
 
 def calculateRelCoordinates(feedrates, time):
@@ -87,11 +87,11 @@ def generateGCode(feedratesTimeMatrix, filename):
     with open(filename, 'w') as file:
         file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")        
         file.write(coordinateToGCode_G0(STARTPOSITION, 3600) + "\n")
-        file.write(timeDelayToGCode_G4(1000))
+        file.write(timeDelayToGCode_G4(1))
         oldCoordinates = STARTPOSITION
         for feedrates, time in feedratesTimeMatrix:
             if (isAllZeros(feedrates)):
-                file.write(timeDelayToGCode_G4(time))
+                file.write(timeDelayToGCode_G4(time*TIMETODISTANCECONSTANT))
             else:
                 relCoordinates = calculateRelCoordinates(feedrates, time)
                 absoluteFeedrate = calculateAbsoluteFeedrate(feedrates)
