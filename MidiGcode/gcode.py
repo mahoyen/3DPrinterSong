@@ -66,8 +66,9 @@ def calculateNewPosition(oldCoordinate, relCoordinate):
             if (newCoordinate[i] < EPSILON[i] or newCoordinate[i] > BUILDING_AREA[i] - EPSILON[i]):
                 newCoordinate[i] = findLongestDistanceAndSaturate(oldCoordinate[i], relCoordinate[i], i)
 
-
-
+    if isCoordinateOutside(newCoordinate):
+        raise ValueError("New position outside of build area")
+        
     return newCoordinate
 
 #Takes in coordinatearray and feedrate and returns gcode string
