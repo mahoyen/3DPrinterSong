@@ -42,33 +42,33 @@ def isCoordinateOutside(coordinate):
     return False
 
 # Takes inn old coordinates and relative coordinates and outputs new coordinate
-def calculateNewPosition(oldCoordinates, relCoordinates):
-    # if isCoordinateOutside(relCoordinates): # This is wrong. If movement< build_area_min raises ValueError
+def calculateNewPosition(oldCoordinate, relCoordinate):
+    # if isCoordinateOutside(relCoordinate): # This is wrong. If movement< build_area_min raises ValueError
     #     raise ValueError("Movement larger than build area or negativ")
-    if isCoordinateOutside(oldCoordinates):
+    if isCoordinateOutside(oldCoordinate):
         raise ValueError("Position outside of build area")
 
-    newCoordinates = list(oldCoordinates)
+    newCoordinate = list(oldCoordinate)
 
     for i in range(3):        
-        newCoordinates[i] = oldCoordinates[i] + relCoordinates[i] #*direction[i]
+        newCoordinate[i] = oldCoordinate[i] + relCoordinate[i] #*direction[i]
 
-        if (newCoordinates[i] < EPSILON[i] or newCoordinates[i] > BUILDING_AREA[i] - EPSILON[i]):
+        if (newCoordinate[i] < EPSILON[i] or newCoordinate[i] > BUILDING_AREA[i] - EPSILON[i]):
             #direction[i] *= -1
-            newCoordinates[i] = oldCoordinates[i] - relCoordinates[i] #*direction[i]
+            newCoordinate[i] = oldCoordinate[i] - relCoordinats[i] #*direction[i]
 
-            if (newCoordinates[i] < EPSILON[i]):
-                newCoordinates[i] = EPSILON[i]
-            elif (newCoordinates[i] > BUILDING_AREA[i] - EPSILON[i]):
-                newCoordinates[i] = BUILDING_AREA[i] - EPSILON[i]
+            if (newCoordinate[i] < EPSILON[i]):
+                newCoordinate[i] = EPSILON[i]
+            elif (newCoordinate[i] > BUILDING_AREA[i] - EPSILON[i]):
+                newCoordinate[i] = BUILDING_AREA[i] - EPSILON[i]
 
 
 
-    return newCoordinates
+    return newCoordinate
 
 #Takes in coordinatearray and feedrate and returns gcode string
-def coordinateToGCode_G0(newCoordinates, feedrate):
-    return "G0 X"+str(newCoordinates[0])+" Y"+str(newCoordinates[1])+" Z"+str(newCoordinates[2])+" F"+str(feedrate)    
+def coordinateToGCode_G0(newCoordinate, feedrate):
+    return "G0 X"+str(newCoordinate[0])+" Y"+str(newCoordinate[1])+" Z"+str(newCoordinate[2])+" F"+str(feedrate)    
 
 # Returns a gcode string to pause for given amount of milliseconds
 def timeDelayToGCode_G4(milliSeconds):
@@ -77,10 +77,10 @@ def timeDelayToGCode_G4(milliSeconds):
     return ""
 
 def calculateRelCoordinates(feedrates, time):
-    relCoordinates = list(feedrates)
+    relCoordinate = list(feedrates)
     for i in range(len(feedrates)):
-        relCoordinates[i] = feedrates[i]*time*TIMETODISTANCECONSTANT
-    return relCoordinates
+        relCoordinate[i] = feedrates[i]*time*TIMETODISTANCECONSTANT
+    return relCoordinate
 
 # Generates gCode from feedrate and time and saves it in filename
 def generateGCode(feedratesTimeMatrix, filename):
@@ -88,13 +88,13 @@ def generateGCode(feedratesTimeMatrix, filename):
         file.write(";FLAVOR:UltiGCode\n;TIME:346\n;MATERIAL:43616\n;MATERIAL2:0\n;NOZZLE_DIAMETER:0.4\nM82\n")        
         file.write(coordinateToGCode_G0(STARTPOSITION, 3600) + "\n")
         file.write(timeDelayToGCode_G4(1000))
-        oldCoordinates = STARTPOSITION
+        oldCoordinate = STARTPOSITION
         for feedrates, time in feedratesTimeMatrix:
             if (isAllZeros(feedrates)):
                 file.write(timeDelayToGCode_G4(time))
             else:
-                relCoordinates = calculateRelCoordinates(feedrates, time)
+                relCoordinate = calculateRelCoordinates(feedrates, time)
                 absoluteFeedrate = calculateAbsoluteFeedrate(feedrates)
-                newCoordinates = calculateNewPosition(oldCoordinates, relCoordinates)
-                file.write(coordinateToGCode_G0(newCoordinates, absoluteFeedrate) + "\n")
-                oldCoordinates = newCoordinates
+                newCoordinate = calculateNewPosition(oldCoordinate, relCoordinate)
+                file.write(coordinateToGCode_G0(newCoordinate, absoluteFeedrate) + "\n")
+                oldCoordinate = newCoordinate
