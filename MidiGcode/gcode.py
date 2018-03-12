@@ -41,6 +41,12 @@ def isCoordinateOutside(coordinate):
             return True
     return False
 
+def findLongestDistanceAndSaturate(oldCoordinate, relCoordinate, i):
+    if ((BUILDING_AREA[i])/2 < oldCoordinate[i]):
+        return EPSILON[i]
+    else:
+        return BUILDING_AREA[i] - EPSILON[i]
+
 # Takes inn old coordinates and relative coordinates and outputs new coordinate
 def calculateNewPosition(oldCoordinate, relCoordinate):
     # if isCoordinateOutside(relCoordinate): # This is wrong. If movement< build_area_min raises ValueError
@@ -57,10 +63,8 @@ def calculateNewPosition(oldCoordinate, relCoordinate):
             #direction[i] *= -1
             newCoordinate[i] = oldCoordinate[i] - relCoordinats[i] #*direction[i]
 
-            if (newCoordinate[i] < EPSILON[i]):
-                newCoordinate[i] = EPSILON[i]
-            elif (newCoordinate[i] > BUILDING_AREA[i] - EPSILON[i]):
-                newCoordinate[i] = BUILDING_AREA[i] - EPSILON[i]
+            if (newCoordinate[i] < EPSILON[i] or newCoordinate[i] > BUILDING_AREA[i] - EPSILON[i]):
+                newCoordinate[i] = findLongestDistanceAndSaturate(oldCoordinate[i], relCoordinate[i], i)
 
 
 
