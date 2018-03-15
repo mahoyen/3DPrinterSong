@@ -1,0 +1,24 @@
+{
+    "printer": {
+        "buildArea":{
+            "x": 223,
+            "y": 223,
+            "z": 305
+        },
+        "epsilon":{
+            "x": 10,
+            "y": 10,
+            "z": 10
+        }
+    },
+    "song":{
+        "frequencyScaleConstant": 1,
+        "timeScaleConstant": 1,
+        "track": 0,
+        "startposition":{
+            "x": 210,
+            "y": 210,
+            "z": 100
+        }
+    }
+}

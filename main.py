@@ -1,6 +1,6 @@
 # Imports
 import sys
-from MidiGcode import midi, gcode
+from MidiGcode import midi, gcode, Config
 from mido import MidiFile
         
 # Genretates gCode from midifile
@@ -37,4 +37,13 @@ def main():
     #print("Generation of gcode failed "+str(e))
     exit(1)
 
-main()
+print(Config.BUILDING_AREA)
+print(Config.EPSILON)
+print(Config.STARTPOSITION)
+
+# Song settings
+print(Config.FREQUENCYTOFEEDRATECONSTANT)
+print(Config.TIMETODISTANCECONSTANT)
+print(Config.TRACK)
+
+# main()

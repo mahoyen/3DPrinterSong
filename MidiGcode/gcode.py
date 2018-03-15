@@ -1,11 +1,3 @@
-# Constants 
-
-FREQUENCYTOFEEDRATECONSTANT = 14
-TIMETODISTANCECONSTANT = 0.5
-BUILDING_AREA = [223, 223, 305] # [X, Y, Z]
-EPSILON = [10, 10, 10] # [X, Y, Z]
-STARTPOSITION = [210, 210, 100] # [X, Y, Z]
-
 # Global variables
 direction = [1,1,1] # [X, Y, Z]
 
