@@ -1,6 +1,5 @@
 # Imports
 from mido import MidiFile
-import datetime as dt
 
 # Converts from miditoneNumber to frequency
 def frequencyFromMidiNote(note):
@@ -68,8 +67,7 @@ def getDuration(track):
     return duration/480
 
 def printTrack(track, filename):
-    miditextfile = open(filename, "w")
-    miditextfile.write(str(dt.datetime.now())+"\n")
+    miditextfile = open(filename, "w")   
 
     for msg in track:
         try:
